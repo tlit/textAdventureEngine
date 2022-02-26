@@ -13,7 +13,7 @@ func NewScanner() *bufio.Scanner {
 	return bufio.NewScanner(os.Stdin)
 }
 
-func scanText(s *bufio.Scanner) string {
+func scanText(s bufio.Scanner) string {
 	if s.Scan() {
 		return s.Text()
 	}

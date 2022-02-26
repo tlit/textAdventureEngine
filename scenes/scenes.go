@@ -8,6 +8,10 @@ import (
 	"textadventureengine/utils"
 )
 
+type SceneMap map[string]*Scene
+type ExitMap map[string]Exit
+type DestinationMap map[string]string
+
 type Scene struct {
 	Id          `json:"id"`
 	Name        `json:"name"`
@@ -22,7 +26,6 @@ type Requirement struct {
 	SuccessMessage   string `json:"successmessage"`
 	FailMessage      string `json:"failmessage"`
 }
-
 type Exit struct {
 	Id                    `json:"id"`
 	Description           string      `json:"description"`
@@ -30,10 +33,6 @@ type Exit struct {
 	ExitRequirement       Requirement `json:"exit_requirement"`
 	VisibilityRequirement Requirement `json:"visibility_requirement"`
 }
-
-type SceneMap map[string]*Scene
-type ExitMap map[string]Exit
-type DestinationMap map[string]string
 
 var Room = Scene{
 	"1",

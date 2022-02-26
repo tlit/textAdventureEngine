@@ -11,17 +11,19 @@ import (
 
 type GameStructure struct {
 	player.Player
-	CurrentScene scenes.Scene
-	NextScene    scenes.Scene
-	Input        *bufio.Scanner
+	CurrentScene *scenes.Scene
+	NextScene    *scenes.Scene
+	Input        bufio.Scanner
+	Scenes       *scenes.SceneMap
+	Exits        *scenes.ExitMap
 }
 
 func (gs *GameStructure) GoDirection(d string) {
 	scn := gs.CurrentScene.GetNextScene(d)
-	exit := scenes.Exits.Get(scn)
+	exit := gs.Exits.Get(scn)
 	if gs.Meets(exit.ExitRequirement) {
-		x := scenes.Scenes.Get(exit.Destination)
-		gs.NextScene = *x
+		x := gs.Scenes.Get(exit.Destination)
+		gs.NextScene = x
 		utils.PrintLine(exit.ExitRequirement.SuccessMessage)
 	} else {
 		utils.PrintLine(exit.ExitRequirement.FailMessage)
