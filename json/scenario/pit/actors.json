@@ -1,0 +1,14 @@
+{
+  "grappling hook": {
+    "id": "grapple",
+    "name": "grappling_hook",
+    "description": "a large metal hook on the end of a rope",
+    "flags": {}
+  },
+  "candle": {
+    "id": "candle",
+    "name": "candle",
+    "description": "a white wax candle",
+    "flags": {}
+  }
+}

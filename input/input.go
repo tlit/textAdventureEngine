@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 	"textadventureengine/gameStructure"
-	"textadventureengine/scenes"
 	"textadventureengine/utils"
 )
 
@@ -13,7 +12,7 @@ func NewScanner() *bufio.Scanner {
 	return bufio.NewScanner(os.Stdin)
 }
 
-func scanText(s *bufio.Scanner) string {
+func scanText(s bufio.Scanner) string {
 	if s.Scan() {
 		return s.Text()
 	}
@@ -49,7 +48,7 @@ func ProcessInput(gs *gameStructure.GameStructure) {
 			direction = scanText(gs.Input)
 		}
 		if exitId, ok := gs.CurrentScene.Exits[direction]; ok {
-			exit := scenes.Exits.Get(exitId)
+			exit := gs.Exits[exitId]
 			utils.PrintLine(exit.Description)
 		} else {
 			utils.PrintLine("You cannot see anything in that direction.")
@@ -63,9 +62,9 @@ func ProcessInput(gs *gameStructure.GameStructure) {
 			utils.PrintLine(verb + " what?")
 			object = scanText(gs.Input)
 		}
-		if o, ok := gs.CurrentScene.Actors[object]; ok {
-			gs.TakeObject(object)
-			utils.PrintLine("You take the " + string(o.Name))
+		if _, ok := gs.CurrentScene.Actors[object]; ok {
+			obj := gs.TakeObject(object)
+			utils.PrintLine("You take the " + string(obj.Name))
 		} else {
 			utils.PrintLine("I don't understand " + object)
 		}
