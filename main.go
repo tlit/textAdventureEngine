@@ -35,6 +35,7 @@ func main() {
 	for true {
 		if !reflect.DeepEqual(*Game.NextScene, scenes.Scene{}) {
 			Game.CurrentScene = Game.NextScene
+			Game.NextScene = &scenes.Scene{}
 		}
 		for k, _ := range Game.CurrentScene.Actors {
 			Game.CurrentScene.Actors[k] = Game.Actors[k]

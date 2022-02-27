@@ -34,18 +34,6 @@ type Exit struct {
 
 type Actors map[string]string
 
-var Room = Scene{
-	"1",
-	"empty room",
-	"You find yourself in an empty, windowless room.",
-	nil,
-	nil,
-}
-
-//"grappleUp", []actors.Actor{}, actors.Inventory{"grappling hook": actors.Grapple}, "You swing the grappling hook over the rim of the pit and climb the rope.", "You cannot climb up to the rim of the pit."
-//var Exits = json.Marshal()
-//var Scenes =
-
 func (s Scene) GetDestination(dest string) string {
 	return s.Exits[dest]
 }
