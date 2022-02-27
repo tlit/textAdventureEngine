@@ -2,7 +2,6 @@ package gameStructure
 
 import (
 	"bufio"
-	"fmt"
 	"reflect"
 	"strings"
 	"textadventureengine/actors"
@@ -26,21 +25,30 @@ func (gs *GameStructure) Run() {
 	utils.PrintLine(gs.CurrentScene.Print())
 	var out string
 	var x []string
-	for _, v := range gs.CurrentScene.Actors {
-		name := string(v.Name)
-		if utils.StartsWithVowel(name) {
-			x = append(x, "an "+name)
+	if len(gs.CurrentScene.Actors) > 0 {
+		for _, v := range gs.CurrentScene.Actors {
+			name := string(v.Name)
+			if utils.StartsWithVowel(name) {
+				x = append(x, "an "+name)
+			} else {
+				x = append(x, "a "+name)
+			}
+		}
+		if len(x) > 0 {
+			out = strings.Join(x, ",\n")
+			out = "\t" + out
 		} else {
-			x = append(x, "a "+name)
+			out = ""
+		}
+		utils.PrintLine("You see here:")
+		utils.PrintLine(out)
+	}
+	if len(gs.CurrentScene.Exits) > 0 {
+		utils.PrintLine("Exits:")
+		for exit := range gs.CurrentScene.Exits {
+			utils.PrintLine("\t" + exit)
 		}
 	}
-	if len(x) > 0 {
-		out = strings.Join(x, ", ")
-	} else {
-		out = ""
-	}
-	utils.PrintLine(out)
-	fmt.Println(gs.CurrentScene.Exits)
 	return
 }
 
@@ -56,6 +64,7 @@ func (gs *GameStructure) GoDirection(d string) {
 	} else {
 		utils.PrintLine(req.FailMessage + "\n")
 	}
+	gs.NextScene = gs.Scenes[exit.Destination]
 }
 
 func (gs *GameStructure) TakeObject(o string) *actors.Actor {
@@ -87,9 +96,10 @@ func (gs GameStructure) Meets(req scenes.Requirement) bool {
 	}
 	inventoryHasRequiredActors := len(req.Inventory) == 0
 	if !inventoryHasRequiredActors {
-		for _, ri := range req.Inventory {
+		for x, _ := range req.Inventory {
+			obj := gs.Actors[x]
 			for _, pi := range gs.Player.Inventory {
-				if reflect.DeepEqual(ri, pi) {
+				if reflect.DeepEqual(obj, &pi) {
 					inventoryHasRequiredActors = true
 				}
 			}
