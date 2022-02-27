@@ -1,7 +1,7 @@
 {
   "grappling hook": {
     "id": "grapple",
-    "name": "grappling_hook",
+    "name": "grappling hook",
     "description": "a large metal hook on the end of a rope",
     "flags": {}
   },

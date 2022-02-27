@@ -3,7 +3,6 @@ package gameStructure
 import (
 	"bufio"
 	"reflect"
-	"strings"
 	"textadventureengine/actors"
 	"textadventureengine/player"
 	"textadventureengine/scenes"
@@ -22,32 +21,13 @@ type GameStructure struct {
 }
 
 func (gs *GameStructure) Run() {
-	utils.PrintLine(gs.CurrentScene.Print())
-	var out string
-	var x []string
-	if len(gs.CurrentScene.Actors) > 0 {
-		for _, v := range gs.CurrentScene.Actors {
-			name := string(v.Name)
-			if utils.StartsWithVowel(name) {
-				x = append(x, "an "+name)
-			} else {
-				x = append(x, "a "+name)
-			}
-		}
-		if len(x) > 0 {
-			out = strings.Join(x, ",\n")
-			out = "\t" + out
-		} else {
-			out = ""
-		}
-		utils.PrintLine("You see here:")
-		utils.PrintLine(out)
-	}
+	utils.PrintLine(gs.CurrentScene.PrintDescription())
+	utils.PrintLine("You see here:")
+	utils.PrintLine(gs.CurrentScene.PrintActors())
 	if len(gs.CurrentScene.Exits) > 0 {
 		utils.PrintLine("Exits:")
-		for exit := range gs.CurrentScene.Exits {
-			utils.PrintLine("\t" + exit)
-		}
+		utils.PrintLine(gs.CurrentScene.PrintExits())
+
 	}
 	return
 }

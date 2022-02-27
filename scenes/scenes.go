@@ -6,6 +6,7 @@ import (
 	"strings"
 	"textadventureengine/actors"
 	. "textadventureengine/types"
+	"textadventureengine/utils"
 )
 
 type DestinationMap map[string]string
@@ -50,7 +51,7 @@ func (s Scene) GetNextScene(dir string) string {
 	return dest
 }
 
-func (s Scene) Print() string {
+func (s Scene) PrintDescription() string {
 	return string(s.Description) + "\n"
 }
 
@@ -73,4 +74,32 @@ func ReadRequirements(s string) map[string]*Requirement {
 	file, _ := ioutil.ReadFile("json/scenario/" + strings.ToLower(s) + "/requirements.json")
 	_ = json.Unmarshal([]byte(file), &data)
 	return data
+}
+
+func (s Scene) PrintActors() string {
+	var out string
+	var x []string
+	for _, v := range s.Actors {
+		name := string(v.Name)
+		if utils.StartsWithVowel(name) {
+			x = append(x, "an "+name)
+		} else {
+			x = append(x, "a "+name)
+		}
+	}
+	if len(x) > 0 {
+		out = strings.Join(x, ",\n")
+		out = "\t" + out
+	} else {
+		out = ""
+	}
+	return out
+}
+
+func (s Scene) PrintExits() string {
+	var out string
+	for exit := range s.Exits {
+		out = out + "\t" + exit
+	}
+	return out
 }
