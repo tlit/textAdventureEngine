@@ -22,6 +22,7 @@ func scanText(s bufio.Scanner) string {
 func ProcessInput(gs *gameStructure.GameStructure) {
 	var input string
 	input = scanText(gs.Input)
+	input = strings.ToLower(input)
 	words := strings.Split(input, " ")
 	verb := words[0]
 	switch verb {

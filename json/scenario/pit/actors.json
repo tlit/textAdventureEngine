@@ -3,7 +3,9 @@
     "id": "grapple",
     "name": "grappling hook",
     "description": "a large metal hook on the end of a rope",
-    "flags": {}
+    "flags": {
+      "climb": 20
+    }
   },
   "candle": {
     "id": "candle",

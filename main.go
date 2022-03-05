@@ -7,6 +7,7 @@ import (
 	"textadventureengine/input"
 	"textadventureengine/player"
 	"textadventureengine/scenes"
+	"textadventureengine/types"
 )
 
 func main() {
@@ -17,7 +18,7 @@ func main() {
 	act := actors.ReadActors(scenario)
 	req := scenes.ReadRequirements(scenario)
 	Game := gameStructure.GameStructure{
-		player.Player{actors.Inventory{}},
+		player.Player{actors.Inventory{},types.Flags{}},
 		firstScene,
 		&scenes.Scene{},
 		*input.NewScanner(),
