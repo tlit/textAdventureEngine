@@ -16,10 +16,6 @@ func main() {
 	ext := scenes.ReadExits(scenario)
 	act := actors.ReadActors(scenario)
 	req := scenes.ReadRequirements(scenario)
-	//currentActors := map[string]*actors.Actor{}
-	//for k, _ := range firstScene.Actors {
-	//	currentActors[k] = act[k]
-	//}
 	Game := gameStructure.GameStructure{
 		player.Player{actors.Inventory{}},
 		firstScene,
@@ -40,7 +36,7 @@ func main() {
 		for k, _ := range Game.CurrentScene.Actors {
 			Game.CurrentScene.Actors[k] = Game.Actors[k]
 		}
-		Game.Run()
+		Game.CurrentScene.Run()
 		input.ProcessInput(&Game)
 	}
 }

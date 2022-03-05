@@ -20,18 +20,6 @@ type GameStructure struct {
 	Actors       map[string]*actors.Actor
 }
 
-func (gs *GameStructure) Run() {
-	utils.PrintLine(gs.CurrentScene.PrintDescription())
-	utils.PrintLine("You see here:")
-	utils.PrintLine(gs.CurrentScene.PrintActors())
-	if len(gs.CurrentScene.Exits) > 0 {
-		utils.PrintLine("Exits:")
-		utils.PrintLine(gs.CurrentScene.PrintExits())
-
-	}
-	return
-}
-
 func (gs *GameStructure) GoDirection(d string) {
 	scn := gs.CurrentScene.GetNextScene(d)
 	exit := gs.Exits[scn]

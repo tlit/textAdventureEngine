@@ -35,6 +35,18 @@ type Exit struct {
 
 type Actors map[string]string
 
+func (s *Scene) Run() {
+	utils.PrintLine(s.PrintDescription())
+	utils.PrintLine("You see here:")
+	utils.PrintLine(s.PrintActors())
+	if len(s.Exits) > 0 {
+		utils.PrintLine("Exits:")
+		utils.PrintLine(s.PrintExits())
+
+	}
+	return
+}
+
 func (s Scene) GetDestination(dest string) string {
 	return s.Exits[dest]
 }
