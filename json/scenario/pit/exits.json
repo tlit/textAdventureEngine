@@ -3,11 +3,21 @@
     "id":"1",
     "description": "Light streams in from above the rim of the pit.",
     "destination": "AbovePit",
-    "exit_Requirement": "grappleUp"
+    "requirements": {
+      "climb": 20
+    },
+    "visible": true
   },
   "PitEntrance": {
     "id":"2",
     "description": "A dark pit.",
-    "destination": "Pit"
+    "destination": "Pit",
+    "visible": true
+  },
+  "DarkTunnel": {
+    "id":"3",
+    "description": "A dark tunnel.",
+    "destination": "Tunnel",
+    "visible": true
   }
 }

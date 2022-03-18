@@ -31,13 +31,13 @@ func ProcessInput(gs *gameStructure.GameStructure) {
 		if len(words) > 1 {
 			direction = words[1]
 		} else {
-			utils.PrintLine("Which way?")
+			utils.Prt("Which way?")
 			direction = scanText(gs.Input)
 		}
 		if _, ok := gs.CurrentScene.Exits[direction]; ok {
 			gs.GoDirection(direction)
 		} else {
-			utils.PrintLine("You cannot go " + direction)
+			utils.Prt("You cannot go " + direction)
 		}
 		return
 	case "look":
@@ -45,14 +45,14 @@ func ProcessInput(gs *gameStructure.GameStructure) {
 		if len(words) > 1 {
 			direction = words[1]
 		} else {
-			utils.PrintLine("Which way?")
+			utils.Prt("Which way?")
 			direction = scanText(gs.Input)
 		}
 		if exitId, ok := gs.CurrentScene.Exits[direction]; ok {
 			exit := gs.Exits[exitId]
-			utils.PrintLine(exit.Description)
+			utils.Prt(exit.Description)
 		} else {
-			utils.PrintLine("You cannot see anything in that direction.")
+			utils.Prt("You cannot see anything in that direction.")
 		}
 		return
 	case "get", "grab", "take":
@@ -60,14 +60,18 @@ func ProcessInput(gs *gameStructure.GameStructure) {
 		if len(words) > 1 {
 			object = strings.Join(words[1:len(words)], " ")
 		} else {
-			utils.PrintLine(verb + " what?")
+			utils.Prt(verb + " what?")
 			object = scanText(gs.Input)
 		}
-		if _, ok := gs.CurrentScene.Actors[object]; ok {
-			obj := gs.TakeObject(object)
-			utils.PrintLine("You take the " + string(obj.Name))
+		if obj, ok := gs.CurrentScene.Actors[object]; ok {
+			if _, ok := obj.Flags["portable"]; ok {
+				gs.TakeObject(object)
+				utils.Prt("You take the " + string(obj.Name))
+			} else {
+				utils.Prt("You cannot take the " + string(obj.Name))
+			}
 		} else {
-			utils.PrintLine("I don't understand " + object)
+			utils.Prt("I don't understand " + object)
 		}
 		return
 	case "drop":
@@ -75,26 +79,26 @@ func ProcessInput(gs *gameStructure.GameStructure) {
 		if len(words) > 1 {
 			object = strings.Join(words[1:len(words)], " ")
 		} else {
-			utils.PrintLine(verb + " what?")
+			utils.Prt(verb + " what?")
 			object = scanText(gs.Input)
 		}
 		if o, ok := gs.Player.Inventory[object]; ok {
 			gs.DropObject(object)
-			utils.PrintLine("You drop the " + string(o.Name))
+			utils.Prt("You drop the " + string(o.Name))
 		} else {
-			utils.PrintLine("I don't understand " + object)
+			utils.Prt("I don't understand " + object)
 		}
 		return
 	case "i", "inv", "inventory":
-		utils.PrintLine("You are carrying:")
+		utils.Prt("You are carrying:")
 		if len(gs.Player.Inventory) == 0 {
-			utils.PrintLine("	Nothing")
+			utils.Prt("	Nothing")
 		}
 		for _, o := range gs.Player.Inventory {
-			utils.PrintLine("	" + string(o.Name))
+			utils.Prt("	" + string(o.Name))
 		}
 		return
 	default:
-		utils.PrintLine("I don't know \"" + verb + "\"")
+		utils.Prt("I don't know \"" + verb + "\"")
 	}
 }

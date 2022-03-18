@@ -6,6 +6,7 @@ import (
 	"textadventureengine/actors"
 	"textadventureengine/player"
 	"textadventureengine/scenes"
+	"textadventureengine/types"
 	"textadventureengine/utils"
 )
 
@@ -23,16 +24,33 @@ type GameStructure struct {
 func (gs *GameStructure) GoDirection(d string) {
 	scn := gs.CurrentScene.GetNextScene(d)
 	exit := gs.Exits[scn]
-	req := gs.Requirements[exit.ExitRequirement]
-	if req == nil {
-		req = &scenes.Requirement{}
+	//req := gs.Requirements[exit.Requirements]
+	//if req == nil {
+	//	req = &scenes.Requirement{}
+	//}
+	//if gs.Meets(*req) {
+	//	utils.Prt(req.SuccessMessage + "\n")
+	//} else {
+	//	utils.Prt(req.FailMessage + "\n")
+	//}
+	canExit := true
+	for k, v := range exit.Requirements {
+		if !gs.Player.Can(types.Flag{k, v}) {
+			canExit = false
+		}
 	}
-	if gs.Meets(*req) {
-		utils.PrintLine(req.SuccessMessage + "\n")
+	if !canExit {
+		utils.Prt("No can do.")
 	} else {
-		utils.PrintLine(req.FailMessage + "\n")
+		gs.NextScene = gs.Scenes[exit.Destination]
 	}
-	gs.NextScene = gs.Scenes[exit.Destination]
+}
+
+func (gs *GameStructure) GetObject(o string) *actors.Actor {
+	if obj, ok := gs.CurrentScene.Actors[o]; ok {
+		return obj
+	}
+	return nil
 }
 
 func (gs *GameStructure) TakeObject(o string) *actors.Actor {
@@ -48,6 +66,10 @@ func (gs *GameStructure) DropObject(o string) {
 	obj := gs.Player.Inventory[o]
 	gs.CurrentScene.Actors[o] = &obj
 	delete(gs.Player.Inventory, o)
+}
+
+func (gs *GameStructure) UseObject(o string) {
+
 }
 
 func (gs GameStructure) Meets(req scenes.Requirement) bool {
@@ -74,4 +96,15 @@ func (gs GameStructure) Meets(req scenes.Requirement) bool {
 		}
 	}
 	return sceneHasRequiredActors && inventoryHasRequiredActors
+}
+
+func (gs GameStructure) PrintVisibleExits() (output string) {
+	var out string
+	for k, v := range gs.CurrentScene.Exits {
+		x := gs.Exits[v]
+		if x.Visible {
+			out = out + "\t" + k + ": " + x.Description
+		}
+	}
+	return out
 }
