@@ -1,0 +1,30 @@
+{
+  "Pit": {
+    "id": "1",
+    "Name": "empty pit",
+    "description": "You find yourself at the bottom of a pit. The air is cool and humid. You can see no way to climb out.",
+    "actors": {
+      "grappling hook":{},
+      "pit ledge":{}
+    },
+    "exits": {"up": "PitExit"}
+  },
+  "AbovePit": {
+    "id": "2",
+    "Name": "above the pit",
+    "description": "You are in the open desert. The sun beats down on your skin. The air is dry",
+    "actors": {
+      "candle":{}
+    },
+    "exits": {"down": "PitEntrance"}
+  },
+  "Tunnel": {
+    "id": "3",
+    "Name": "dark tunnel",
+    "description": "You are in the open desert. The sun beats down on your skin. The air is dry",
+    "actors": {
+      "candle":{}
+    },
+    "exits": {"down": "PitEntrance"}
+  }
+}

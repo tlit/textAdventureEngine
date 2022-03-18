@@ -1,0 +1,28 @@
+{
+  "grappling hook": {
+    "id": "grapple",
+    "name": "grappling hook",
+    "description": "a large metal hook on the end of a rope",
+    "flags": {
+      "climb": 20,
+      "portable": true
+    }
+  },
+  "candle": {
+    "id": "candle",
+    "name": "candle",
+    "description": "a white wax candle",
+    "flags": {
+      "illuminate": 30,
+      "portable": true
+    }
+  },
+  "pit ledge": {
+    "id": "pitledge",
+    "name": "ledge above you",
+    "description": "the ledge of the pit above you",
+    "flags": {
+      "climb": 20
+    }
+  }
+}
