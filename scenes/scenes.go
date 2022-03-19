@@ -16,7 +16,7 @@ type Scene struct {
 	Name        `json:"name"`
 	Description `json:"description"`
 	Actors      map[string]*actors.Actor `json:"actors"`
-	Exits       map[string]string        `json:"exits"`
+	Exits       map[Direction]string     `json:"exits"`
 }
 type Requirement struct {
 	Id               `json:"id"`
@@ -43,18 +43,14 @@ func (s *Scene) Run() {
 	return
 }
 
-func (s Scene) GetDestination(dest string) string {
-	return s.Exits[dest]
+func (s Scene) GetDestination(dir Direction) string {
+	return s.Exits[dir]
 }
 
 func (s Scene) GetNextScene(dir string) string {
 	var dest string
-	switch dir {
-	case "up", "down", "north", "south", "east", "west":
-		dest = s.GetDestination(dir)
-		break
-	default:
-		dest = ""
+	if v, ok := DirectionMap[dir]; ok {
+		dest = s.GetDestination(v)
 	}
 	return dest
 }

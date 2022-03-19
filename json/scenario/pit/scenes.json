@@ -7,7 +7,7 @@
       "grappling hook":{},
       "pit ledge":{}
     },
-    "exits": {"up": "PitExit"}
+    "exits": {"0": "PitExit"}
   },
   "AbovePit": {
     "id": "2",
@@ -16,15 +16,6 @@
     "actors": {
       "candle":{}
     },
-    "exits": {"down": "PitEntrance"}
-  },
-  "Tunnel": {
-    "id": "3",
-    "Name": "dark tunnel",
-    "description": "You are in the open desert. The sun beats down on your skin. The air is dry",
-    "actors": {
-      "candle":{}
-    },
-    "exits": {"down": "PitEntrance"}
+    "exits": {"1": "PitEntrance"}
   }
 }

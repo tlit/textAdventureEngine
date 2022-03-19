@@ -100,10 +100,10 @@ func (gs GameStructure) Meets(req scenes.Requirement) bool {
 
 func (gs GameStructure) PrintVisibleExits() (output string) {
 	var out string
-	for k, v := range gs.CurrentScene.Exits {
+	for _, v := range gs.CurrentScene.Exits {
 		x := gs.Exits[v]
 		if x.Visible {
-			out = out + "\t" + k + ": " + x.Description
+			out = out + "\t" + x.Description
 		}
 	}
 	return out
