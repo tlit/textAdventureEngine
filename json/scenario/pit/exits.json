@@ -1,0 +1,13 @@
+{
+  "PitExit": {
+    "id":"1",
+    "description": "Light streams in from above the rim of the pit.",
+    "destination": "AbovePit",
+    "exit_Requirement": "grappleUp"
+  },
+  "PitEntrance": {
+    "id":"2",
+    "description": "A dark pit.",
+    "destination": "Pit"
+  }
+}

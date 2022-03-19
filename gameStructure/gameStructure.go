@@ -2,8 +2,8 @@ package gameStructure
 
 import (
 	"bufio"
-	"fmt"
 	"reflect"
+	"textadventureengine/actors"
 	"textadventureengine/player"
 	"textadventureengine/scenes"
 	"textadventureengine/utils"
@@ -14,35 +14,43 @@ type GameStructure struct {
 	CurrentScene *scenes.Scene
 	NextScene    *scenes.Scene
 	Input        bufio.Scanner
-	Scenes       *scenes.SceneMap
-	Exits        *scenes.ExitMap
+
+	Scenes       map[string]*scenes.Scene
+	Exits        map[string]*scenes.Exit
+	Requirements map[string]*scenes.Requirement
+	Actors       map[string]*actors.Actor
 }
 
 func (gs *GameStructure) GoDirection(d string) {
 	scn := gs.CurrentScene.GetNextScene(d)
-	exit := gs.Exits.Get(scn)
-	if gs.Meets(exit.ExitRequirement) {
-		x := gs.Scenes.Get(exit.Destination)
-		gs.NextScene = x
-		utils.PrintLine(exit.ExitRequirement.SuccessMessage)
-	} else {
-		utils.PrintLine(exit.ExitRequirement.FailMessage)
+
+	exit := gs.Exits[scn]
+	req := gs.Requirements[exit.ExitRequirement]
+	if req == nil {
+		req = &scenes.Requirement{}
 	}
-	fmt.Println()
+	if gs.Meets(*req) {
+		utils.PrintLine(req.SuccessMessage + "\n")
+
+	} else {
+		utils.PrintLine(req.FailMessage + "\n")
+	}
+	gs.NextScene = gs.Scenes[exit.Destination]
 }
 
-func (gs *GameStructure) TakeObject(o string) {
+func (gs *GameStructure) TakeObject(o string) *actors.Actor {
 	//TODO check requirements are met
 	obj := gs.CurrentScene.Actors[o]
-	gs.Player.Inventory[o] = obj
+	gs.Player.Inventory[o] = *obj
 	delete(gs.CurrentScene.Actors, o)
+	return obj
 }
 
 func (gs *GameStructure) DropObject(o string) {
 	//TODO check requirements are met
 	obj := gs.Player.Inventory[o]
-	gs.CurrentScene.Actors[o] = obj
-	delete(gs.Inventory, o)
+	gs.CurrentScene.Actors[o] = &obj
+	delete(gs.Player.Inventory, o)
 }
 
 func (gs GameStructure) Meets(req scenes.Requirement) bool {
@@ -59,9 +67,10 @@ func (gs GameStructure) Meets(req scenes.Requirement) bool {
 	}
 	inventoryHasRequiredActors := len(req.Inventory) == 0
 	if !inventoryHasRequiredActors {
-		for _, ri := range req.Inventory {
+		for x, _ := range req.Inventory {
+			obj := gs.Actors[x]
 			for _, pi := range gs.Player.Inventory {
-				if reflect.DeepEqual(ri, pi) {
+				if reflect.DeepEqual(obj, &pi) {
 					inventoryHasRequiredActors = true
 				}
 			}

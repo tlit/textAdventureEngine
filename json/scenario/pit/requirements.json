@@ -1,0 +1,9 @@
+{
+  "grappleUp": {
+    "id": "grappleUp",
+    "scene_actors": {},
+    "inventory": {"grappling hook": {}},
+    "successmessage": "You swing the grappling hook over the rim of the pit and climb the rope.",
+    "failmessage": "You cannot climb up to the rim of the pit."
+  }
+}

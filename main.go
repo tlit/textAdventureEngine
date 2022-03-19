@@ -9,24 +9,34 @@ import (
 	"textadventureengine/scenes"
 )
 
-var Game gameStructure.GameStructure
-
 func main() {
-	Game = gameStructure.GameStructure{
+	scenario := "Pit"
+	scn := scenes.ReadScenes(scenario)
+	firstScene := scn[scenario]
+	ext := scenes.ReadExits(scenario)
+	act := actors.ReadActors(scenario)
+	req := scenes.ReadRequirements(scenario)
+	Game := gameStructure.GameStructure{
 		player.Player{actors.Inventory{}},
-		scenes.Scenes["Pit"],
+		firstScene,
 		&scenes.Scene{},
 		*input.NewScanner(),
-		&scenes.Scenes,
-		&scenes.Exits,
+		scn,
+		ext,
+		req,
+		act,
 	}
 
 	//Main loop
 	for true {
-		Game.CurrentScene.Run()
-		input.ProcessInput(&Game)
 		if !reflect.DeepEqual(*Game.NextScene, scenes.Scene{}) {
 			Game.CurrentScene = Game.NextScene
+			Game.NextScene = &scenes.Scene{}
 		}
+		for k, _ := range Game.CurrentScene.Actors {
+			Game.CurrentScene.Actors[k] = Game.Actors[k]
+		}
+		Game.CurrentScene.Run()
+		input.ProcessInput(&Game)
 	}
 }
