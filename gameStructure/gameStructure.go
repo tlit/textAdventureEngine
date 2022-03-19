@@ -15,6 +15,7 @@ type GameStructure struct {
 	CurrentScene *scenes.Scene
 	NextScene    *scenes.Scene
 	Input        bufio.Scanner
+
 	Scenes       map[string]*scenes.Scene
 	Exits        map[string]*scenes.Exit
 	Requirements map[string]*scenes.Requirement
@@ -23,6 +24,7 @@ type GameStructure struct {
 
 func (gs *GameStructure) GoDirection(d string) {
 	scn := gs.CurrentScene.GetNextScene(d)
+
 	exit := gs.Exits[scn]
 	//req := gs.Requirements[exit.Requirements]
 	//if req == nil {
