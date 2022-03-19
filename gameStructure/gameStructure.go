@@ -2,7 +2,6 @@ package gameStructure
 
 import (
 	"bufio"
-	"reflect"
 	"textadventureengine/actors"
 	"textadventureengine/player"
 	"textadventureengine/scenes"
@@ -70,32 +69,6 @@ func (gs *GameStructure) DropObject(o string) {
 
 func (gs *GameStructure) UseObject(o string) {
 
-}
-
-func (gs GameStructure) Meets(req scenes.Requirement) bool {
-
-	sceneHasRequiredActors := len(req.SceneActors) == 0
-	if !sceneHasRequiredActors {
-		for _, ra := range req.SceneActors {
-			for _, sa := range gs.CurrentScene.Actors {
-				if reflect.DeepEqual(ra, sa) {
-					sceneHasRequiredActors = true
-				}
-			}
-		}
-	}
-	inventoryHasRequiredActors := len(req.Inventory) == 0
-	if !inventoryHasRequiredActors {
-		for x, _ := range req.Inventory {
-			obj := gs.Actors[x]
-			for _, pi := range gs.Player.Inventory {
-				if reflect.DeepEqual(obj, &pi) {
-					inventoryHasRequiredActors = true
-				}
-			}
-		}
-	}
-	return sceneHasRequiredActors && inventoryHasRequiredActors
 }
 
 func (gs GameStructure) PrintVisibleExits() (output string) {

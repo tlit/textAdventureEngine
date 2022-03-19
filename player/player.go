@@ -18,7 +18,11 @@ func (p *Player) Can(f types.Flag) bool {
 		if ok {
 			got, ok := p.Flags[f.Key].(float64)
 			if ok {
-				return got >= want
+				if got >= want {
+					return true
+				}
+				println("you cannot climb that high")
+				return false
 			}
 		}
 	default:
