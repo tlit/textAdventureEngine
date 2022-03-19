@@ -7,6 +7,8 @@ import (
 	"textadventureengine/input"
 	"textadventureengine/player"
 	"textadventureengine/scenes"
+	"textadventureengine/types"
+	"textadventureengine/utils"
 )
 
 func main() {
@@ -17,7 +19,7 @@ func main() {
 	act := actors.ReadActors(scenario)
 	req := scenes.ReadRequirements(scenario)
 	Game := gameStructure.GameStructure{
-		player.Player{actors.Inventory{}},
+		player.Player{actors.Inventory{}, types.Flags{}},
 		firstScene,
 		&scenes.Scene{},
 		*input.NewScanner(),
@@ -36,7 +38,14 @@ func main() {
 		for k, _ := range Game.CurrentScene.Actors {
 			Game.CurrentScene.Actors[k] = Game.Actors[k]
 		}
+		Game.Player.Flags = types.Flags{}
+		for _, v := range Game.Player.Inventory {
+			for flag, val := range v.Flags {
+				Game.Player.Flags[flag] = val
+			}
+		}
 		Game.CurrentScene.Run()
+		utils.Prt("\nExits:\n" + Game.PrintVisibleExits())
 		input.ProcessInput(&Game)
 	}
 }

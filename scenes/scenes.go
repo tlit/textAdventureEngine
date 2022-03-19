@@ -29,21 +29,17 @@ type Exit struct {
 	Id                    `json:"id"`
 	Description           string `json:"description"`
 	Destination           string `json:"destination"`
-	ExitRequirement       string `json:"exit_requirement"`
+	Requirements          Flags  `json:"requirements"`
 	VisibilityRequirement string `json:"visibility_requirement"`
+	Visible               bool
 }
 
 type Actors map[string]string
 
 func (s *Scene) Run() {
-	utils.PrintLine(s.PrintDescription())
-	utils.PrintLine("You see here:")
-	utils.PrintLine(s.PrintActors())
-	if len(s.Exits) > 0 {
-		utils.PrintLine("Exits:")
-		utils.PrintLine(s.PrintExits())
-
-	}
+	utils.Prt(s.PrintDescription())
+	utils.Prt("You see here:")
+	utils.Prt(s.PrintActors())
 	return
 }
 
@@ -104,14 +100,6 @@ func (s Scene) PrintActors() string {
 		out = "\t" + out
 	} else {
 		out = ""
-	}
-	return out
-}
-
-func (s Scene) PrintExits() string {
-	var out string
-	for exit := range s.Exits {
-		out = out + "\t" + exit
 	}
 	return out
 }
