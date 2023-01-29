@@ -2,43 +2,40 @@ package main
 
 import (
 	"reflect"
-	"textadventureengine/actors"
 	"textadventureengine/gameStructure"
 	"textadventureengine/input"
 	"textadventureengine/player"
 	"textadventureengine/scenes"
-	"textadventureengine/types"
+	. "textadventureengine/types"
 	"textadventureengine/utils"
 )
 
 func main() {
-	scenario := "Pit"
-	scn := scenes.ReadScenes(scenario)
-	firstScene := scn[scenario]
-	ext := scenes.ReadExits(scenario)
-	act := actors.ReadActors(scenario)
-	req := scenes.ReadRequirements(scenario)
+	var scenario = scenes.Scenario_DemoPit
+	//scn := scenes.ReadScenes(scenario)
+	//firstScene := scn[scenario]
+	//ext := scenes.ReadExits(scenario)
+	//act := actors.ReadActors(scenario)
+	//req := scenes.ReadRequirements(scenario)
 	Game := gameStructure.GameStructure{
-		player.Player{actors.Inventory{}, types.Flags{}},
-		firstScene,
-		&scenes.Scene{},
+		player.Player{Actors{}, Flags{}},
+		scenario,
+		&scenario.FirstScene,
+		&Scene{},
 		*input.NewScanner(),
-		scn,
-		ext,
-		req,
-		act,
+		scenario.FirstScene.Actors,
 	}
 
 	//Main loop
 	for true {
-		if !reflect.DeepEqual(*Game.NextScene, scenes.Scene{}) {
+		if !reflect.DeepEqual(*Game.NextScene, Scene{}) {
 			Game.CurrentScene = Game.NextScene
-			Game.NextScene = &scenes.Scene{}
+			Game.NextScene = &Scene{}
 		}
-		for k, _ := range Game.CurrentScene.Actors {
-			Game.CurrentScene.Actors[k] = Game.Actors[k]
-		}
-		Game.Player.Flags = types.Flags{}
+		//for k, _ := range Game.CurrentScene.Actors {
+		//	Game.CurrentScene.Actors[k] = Game.Actors[k]
+		//}
+		Game.Player.Flags = Flags{}
 		for _, v := range Game.Player.Inventory {
 			for flag, val := range v.Flags {
 				Game.Player.Flags[flag] = val

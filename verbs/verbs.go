@@ -3,7 +3,7 @@ package verbs
 import (
 	"strings"
 	"textadventureengine/gameStructure"
-	"textadventureengine/types"
+	. "textadventureengine/types"
 	"textadventureengine/utils"
 )
 
@@ -34,8 +34,9 @@ func travel(gs *gameStructure.GameStructure, words ...string) {
 			}()
 		}
 	}
-	if _, okDir := types.DirectionMap[direction]; okDir {
-		gs.GoDirection(direction)
+	dir := DirectionMap[direction]
+	if _, okDir := gs.CurrentScene.Exits[dir]; okDir {
+		gs.GoDirection(dir)
 	} else {
 		utils.Prt("You cannot go " + direction)
 	}
@@ -53,10 +54,9 @@ func look(gs *gameStructure.GameStructure, words ...string) {
 			}()
 		}
 	}
-	if dir, okDir := types.DirectionMap[direction]; okDir {
-		if exitId, ok := gs.CurrentScene.Exits[dir]; ok {
-			exit := gs.Exits[exitId]
-			utils.Prt(exit.Description)
+	if dir, okDir := DirectionMap[direction]; okDir {
+		if exit, ok := gs.CurrentScene.Exits[dir]; ok {
+			utils.Prt(exit.Description.Print())
 		} else {
 			utils.Prt("You cannot see anything in that direction.")
 		}
@@ -76,7 +76,7 @@ func get(gs *gameStructure.GameStructure, words ...string) {
 	}
 	if obj, ok := gs.CurrentScene.Actors[object]; ok {
 		if _, ok := obj.Flags["portable"]; ok {
-			gs.TakeObject(object)
+			gs.TakeObject(obj)
 			utils.Prt("You take the " + string(obj.Name))
 		} else {
 			utils.Prt("You cannot take the " + string(obj.Name))
@@ -98,7 +98,7 @@ func drop(gs *gameStructure.GameStructure, words ...string) {
 		}
 	}
 	if o, ok := gs.Player.Inventory[object]; ok {
-		gs.DropObject(object)
+		gs.DropObject(o)
 		utils.Prt("You drop the " + string(o.Name))
 	} else {
 		utils.Prt("I don't understand " + object)
@@ -129,7 +129,7 @@ func climb(gs *gameStructure.GameStructure, words ...string) {
 				}
 			}
 			//climb in direction
-			if _, okDir := types.DirectionMap[object]; okDir {
+			if _, okDir := DirectionMap[object]; okDir {
 				if _, okFlag := gs.Player.Flags["climb"]; okFlag {
 					travel(gs, words[1:]...)
 				}

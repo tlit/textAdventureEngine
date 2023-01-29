@@ -1,9 +1,0 @@
-{
-  "room": {
-    "id": "1",
-    "Name": "Empty room",
-    "Description": "You find yourself in an empty, windowless room.",
-    "Actors": {},
-    "Exits": {}
-  }
-}

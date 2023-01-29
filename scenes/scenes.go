@@ -1,101 +1,69 @@
 package scenes
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"strings"
 	"textadventureengine/actors"
 	. "textadventureengine/types"
-	"textadventureengine/utils"
 )
 
-type DestinationMap map[string]string
+var (
+	DemoPit_DemoPitDarkRoom Exit
+	DemoPit_DemoPitTop      Exit
 
-type Scene struct {
-	Id          `json:"id"`
-	Name        `json:"name"`
-	Description `json:"description"`
-	Actors      map[string]*actors.Actor `json:"actors"`
-	Exits       map[Direction]string     `json:"exits"`
-}
-type Requirement struct {
-	Id               `json:"id"`
-	SceneActors      []actors.Actor `json:"scene_actors"`
-	actors.Inventory `json:"inventory"`
-	SuccessMessage   string `json:"successmessage"`
-	FailMessage      string `json:"failmessage"`
-}
-type Exit struct {
-	Id                    `json:"id"`
-	Description           string `json:"description"`
-	Destination           string `json:"destination"`
-	Requirements          Flags  `json:"requirements"`
-	VisibilityRequirement string `json:"visibility_requirement"`
-	Visible               bool
-}
-
-type Actors map[string]string
-
-func (s *Scene) Run() {
-	utils.Prt(s.PrintDescription())
-	utils.Prt("You see here:")
-	utils.Prt(s.PrintActors())
-	return
-}
-
-func (s Scene) GetDestination(dir Direction) string {
-	return s.Exits[dir]
-}
-
-func (s Scene) GetNextScene(dir string) string {
-	var dest string
-	if v, ok := DirectionMap[dir]; ok {
-		dest = s.GetDestination(v)
+	DemoPit = Scene{
+		Name:        "DemoPit",
+		Description: "You are in a pit. The air is dry and hot.",
+		Actors: Actors{
+			string(actors.Candle.Name): actors.Candle,
+		},
+		Exits: Exits{
+			North: &DemoPit_DemoPitDarkRoom,
+			Up:    &DemoPit_DemoPitTop,
+		},
 	}
-	return dest
-}
-
-func (s Scene) PrintDescription() string {
-	return string(s.Description) + "\n"
-}
-
-func ReadScenes(s string) map[string]*Scene {
-	data := map[string]*Scene{}
-	file, _ := ioutil.ReadFile("json/scenario/" + strings.ToLower(s) + "/scenes.json")
-	_ = json.Unmarshal([]byte(file), &data)
-	return data
-}
-
-func ReadExits(s string) map[string]*Exit {
-	data := map[string]*Exit{}
-	file, _ := ioutil.ReadFile("json/scenario/" + strings.ToLower(s) + "/exits.json")
-	_ = json.Unmarshal([]byte(file), &data)
-	return data
-}
-
-func ReadRequirements(s string) map[string]*Requirement {
-	data := map[string]*Requirement{}
-	file, _ := ioutil.ReadFile("json/scenario/" + strings.ToLower(s) + "/requirements.json")
-	_ = json.Unmarshal([]byte(file), &data)
-	return data
-}
-
-func (s Scene) PrintActors() string {
-	var out string
-	var x []string
-	for _, v := range s.Actors {
-		name := string(v.Name)
-		if utils.StartsWithVowel(name) {
-			x = append(x, "an "+name)
-		} else {
-			x = append(x, "a "+name)
-		}
+	DemoPitDarkroom = Scene{
+		Name:        "DemoPitDarkroom",
+		Description: "It will be dark here once implemented",
+		Actors: Actors{
+			string(actors.GrapplingHook.Name): actors.GrapplingHook,
+		},
+		Exits: Exits{
+			South: &DemoPit_DemoPitDarkRoom,
+		},
 	}
-	if len(x) > 0 {
-		out = strings.Join(x, ",\n")
-		out = "\t" + out
-	} else {
-		out = ""
+	DemoPitTop = Scene{
+		Name:        "DemoPitTop",
+		Description: "At the top of the pit",
+		Actors:      Actors{},
+		Exits: Exits{
+			Down: &DemoPit_DemoPitTop,
+		},
 	}
-	return out
+
+	Scenario_DemoPit = Scenario{
+		FirstScene: DemoPit,
+		Scenes: map[string]Scene{
+			string(DemoPit.Name):         DemoPit,
+			string(DemoPitDarkroom.Name): DemoPitDarkroom,
+			string(DemoPitTop.Name):      DemoPitTop,
+		},
+	}
+)
+
+func init() {
+	DemoPit_DemoPitDarkRoom = Exit{
+		Description: "dark hole",
+		Destinations: Destinations{
+			string(DemoPit.Name):         {"a dark hole, just large enough to squeeze through", DemoPitDarkroom, Flags{}},
+			string(DemoPitDarkroom.Name): {"a hole in the wall through which a pit is visible", DemoPit, Flags{}},
+		},
+		Visible: true,
+	}
+	DemoPit_DemoPitTop = Exit{
+		Description: "pit top",
+		Destinations: Destinations{
+			string(DemoPitTop.Name): {"a pit in the ground", DemoPit, Flags{}},
+			string(DemoPit.Name):    {"light and dust both stream down from the opening above you", DemoPitTop, Flags{}},
+		},
+		Visible: true,
+	}
 }

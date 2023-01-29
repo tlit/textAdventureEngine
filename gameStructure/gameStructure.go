@@ -2,69 +2,52 @@ package gameStructure
 
 import (
 	"bufio"
-	"textadventureengine/actors"
 	"textadventureengine/player"
-	"textadventureengine/scenes"
-	"textadventureengine/types"
+	. "textadventureengine/types"
 	"textadventureengine/utils"
 )
 
 type GameStructure struct {
 	player.Player
-	CurrentScene *scenes.Scene
-	NextScene    *scenes.Scene
+	Scenario
+	CurrentScene *Scene
+	NextScene    *Scene
 	Input        bufio.Scanner
-	Scenes       map[string]*scenes.Scene
-	Exits        map[string]*scenes.Exit
-	Requirements map[string]*scenes.Requirement
-	Actors       map[string]*actors.Actor
+	Actors
 }
 
-func (gs *GameStructure) GoDirection(d string) {
-	scn := gs.CurrentScene.GetNextScene(d)
-	exit := gs.Exits[scn]
-	//req := gs.Requirements[exit.Requirements]
-	//if req == nil {
-	//	req = &scenes.Requirement{}
-	//}
-	//if gs.Meets(*req) {
-	//	utils.Prt(req.SuccessMessage + "\n")
-	//} else {
-	//	utils.Prt(req.FailMessage + "\n")
-	//}
+func (gs *GameStructure) GoDirection(d CompassDirection) {
+	exit := gs.CurrentScene.Exits[d]
+	dest := exit.Destinations[string(gs.CurrentScene.Name)]
+
 	canExit := true
-	for k, v := range exit.Requirements {
-		if !gs.Player.Can(types.Flag{k, v}) {
+
+	for k, v := range dest.Requirements {
+		if !gs.Player.Can(Flag{k, v}) {
 			canExit = false
 		}
 	}
+
 	if !canExit {
 		utils.Prt("No can do.")
 	} else {
-		gs.NextScene = gs.Scenes[exit.Destination]
+		gs.NextScene = &dest.Scene
 	}
 }
 
-func (gs *GameStructure) GetObject(o string) *actors.Actor {
-	if obj, ok := gs.CurrentScene.Actors[o]; ok {
-		return obj
-	}
-	return nil
+func (gs *GameStructure) TakeObject(x Actor) bool {
+	//TODO check requirements are met
+	gs.Player.Inventory[string(x.Name)] = x
+	delete(gs.Actors, string(x.Name))
+	return true
 }
 
-func (gs *GameStructure) TakeObject(o string) *actors.Actor {
+func (gs *GameStructure) DropObject(x Actor) bool {
 	//TODO check requirements are met
-	obj := gs.CurrentScene.Actors[o]
-	gs.Player.Inventory[o] = *obj
-	delete(gs.CurrentScene.Actors, o)
-	return obj
-}
-
-func (gs *GameStructure) DropObject(o string) {
-	//TODO check requirements are met
-	obj := gs.Player.Inventory[o]
-	gs.CurrentScene.Actors[o] = &obj
-	delete(gs.Player.Inventory, o)
+	obj := gs.Player.Inventory[string(x.Name)]
+	gs.CurrentScene.Actors[string(x.Name)] = obj
+	delete(gs.Player.Inventory, string(x.Name))
+	return true
 }
 
 func (gs *GameStructure) UseObject(o string) {
@@ -72,11 +55,12 @@ func (gs *GameStructure) UseObject(o string) {
 }
 
 func (gs GameStructure) PrintVisibleExits() (output string) {
-	var out string
-	for _, v := range gs.CurrentScene.Exits {
-		x := gs.Exits[v]
-		if x.Visible {
-			out = out + "\t" + x.Description
+	sceneName := string(gs.CurrentScene.Name)
+	out := ""
+	for k, v := range gs.CurrentScene.Exits {
+		if v.Visible {
+			out = out + "\t" + k.Print() + "\t"
+			out = out + "\t" + v.Destinations[sceneName].Description.Print() + "\n"
 		}
 	}
 	return out
