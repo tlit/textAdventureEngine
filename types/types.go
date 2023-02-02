@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 	"textadventureengine/utils"
 )
@@ -110,8 +111,10 @@ func Print(s string) {
 
 func (s *Scene) Run() {
 	utils.Prt(s.PrintDescription())
-	utils.Prt("You see here:")
-	utils.Prt(s.PrintActors())
+	if !reflect.DeepEqual(s.Actors, Actors{}) {
+		utils.Prt("You see here:")
+		utils.Prt(s.PrintActors())
+	}
 	return
 }
 

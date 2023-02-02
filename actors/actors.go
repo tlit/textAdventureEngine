@@ -19,7 +19,8 @@ var (
 		"grappling hook",
 		"Three splayed iron hooks attacked to the end of a rope",
 		Flags{
-			"climb": 20,
+			"climb":    20,
+			"portable": true,
 		},
 	}
 	Candle = Actor{
@@ -28,6 +29,7 @@ var (
 		"A wax candle",
 		Flags{
 			"illuminate": true,
+			"portable":   true,
 		},
 	}
 )

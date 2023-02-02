@@ -131,7 +131,7 @@ func climb(gs *gameStructure.GameStructure, words ...string) {
 			//climb in direction
 			if _, okDir := DirectionMap[object]; okDir {
 				if _, okFlag := gs.Player.Flags["climb"]; okFlag {
-					travel(gs, words[1:]...)
+					travel(gs, words...)
 				}
 			}
 		}

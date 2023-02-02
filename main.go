@@ -43,6 +43,8 @@ func main() {
 		}
 		Game.CurrentScene.Run()
 		utils.Prt("\nExits:\n" + Game.PrintVisibleExits())
+		utils.Prt(">")
 		input.ProcessInput(&Game)
+		utils.Prt("--------\n")
 	}
 }

@@ -62,7 +62,7 @@ func init() {
 		Description: "pit top",
 		Destinations: Destinations{
 			string(DemoPitTop.Name): {"a pit in the ground", DemoPit, Flags{}},
-			string(DemoPit.Name):    {"light and dust both stream down from the opening above you", DemoPitTop, Flags{}},
+			string(DemoPit.Name):    {"light and dust both stream down from the opening above you", DemoPitTop, Flags{"climb": 20}},
 		},
 		Visible: true,
 	}

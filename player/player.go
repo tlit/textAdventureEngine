@@ -1,7 +1,6 @@
 package player
 
 import (
-	"reflect"
 	. "textadventureengine/types"
 )
 
@@ -11,20 +10,28 @@ type Player struct {
 }
 
 func (p *Player) Can(f Flag) bool {
-	switch reflect.TypeOf(f.Value) {
-	case reflect.TypeOf(float64(0)):
-		want, ok := f.Value.(float64)
-		if ok {
-			got, ok := p.Flags[f.Key].(float64)
-			if ok {
-				if got >= want {
-					return true
-				}
-				println("you cannot climb that high")
-				return false
-			}
+	want := convertToFloat(f.Value)
+	got := convertToFloat(f.Value)
+	if got >= want {
+		return true
+	}
+	{
+		println("you cannot climb that high")
+		return false
+	}
+	return true
+}
+
+func convertToFloat(v interface{}) float64 {
+	var ok bool
+	switch v.(type) {
+	case int:
+		if _, ok = v.(int); ok {
+			return float64(v.(int))
 		}
+	case float64:
+		return v.(float64)
 	default:
 	}
-	return false
+	return v.(float64)
 }

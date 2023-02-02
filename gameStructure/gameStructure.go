@@ -37,8 +37,10 @@ func (gs *GameStructure) GoDirection(d CompassDirection) {
 
 func (gs *GameStructure) TakeObject(x Actor) bool {
 	//TODO check requirements are met
-	gs.Player.Inventory[string(x.Name)] = x
-	delete(gs.Actors, string(x.Name))
+	if _, ok := gs.CurrentScene.Actors[string(x.Name)]; ok {
+		gs.Player.Inventory[string(x.Name)] = x
+		delete(gs.CurrentScene.Actors, string(x.Name))
+	}
 	return true
 }
 
